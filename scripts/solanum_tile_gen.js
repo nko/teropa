@@ -5,11 +5,13 @@ require.paths.unshift(__dirname + '/../vendor');
 var fs = require('fs')
   , sys = require('sys')
   , spawn = require('child_process').spawn
-  , xml = require('node-xml/lib/node-xml')
+  , expat = require('node-expat')
   , tileInit = require('./tile_init')
   , util = require('./util');
 
+var srcPath = __dirname + '/../data';
 var destPath = __dirname + '/../public/tiles/solanum';
+
 var levels = [1, 2, 3, 4, 5, 6, 7];
 var tileSize = 256;
 var worldBounds = [-2.0037508342789244E7, -2.0037508342789244E7, 2.0037508342789244E7, 2.0037508342789244E7];
@@ -22,9 +24,9 @@ var styles = {
     "#Style5": "176 0 0 180"
 };
 
-var file = __dirname + '/../data/control_00020_I.kml';
 
-function writePolygon(out, polygon, style) {
+
+function writePolygon(out, polygon, t, style) {
   polygon = projectPolygon(polygon);
   
   for (var z=0 ; z<levels.length ; z++) {
@@ -43,7 +45,7 @@ function writePolygon(out, polygon, style) {
               Math.round(polygonPixels[i][1] - y * tileSize)
             ]);
           }          
-          out.write(destPath + '/'+levels[z]+'/'+x+'/'+y+'.png '+(styles[style] || styles['#Style1'])+' '+pixelsInThisTile+"\n");
+          out.write(destPath+'/'+t+'/'+levels[z]+'/'+x+'/'+y+'.png '+(styles[style] || styles['#Style1'])+' '+pixelsInThisTile+"\n");
         }
       }
     }
@@ -75,54 +77,76 @@ function parsePolygon(str) {
   return res;
 }
 
-function writePolygonInfo(out, callback) {
-  var parser = new xml.SaxParser(function (cb) {
-    var inPlacemark, currChars, currStyle, cnt = 0;
-    
-    cb.onStartElementNS(function(elem, attrs, prefix, uri, namespace) {
-      currChars = '';
-      if ('Placemark' === elem) {
-        inPlacemark = true;
-      }
-    });
-    cb.onEndElementNS(function(elem, prefix, uri) {
-      if ('styleUrl' === elem && inPlacemark) {
-        currStyle = currChars;
-      } else if ('coordinates' === elem && inPlacemark) {
-        writePolygon(out, parsePolygon(currChars), currStyle);
-        console.log('polygon '+(++cnt));
-      } else if ('Placemark' === elem) {
-        inPlacemark = false;
-      } else if ('kml' === elem) {
-        callback();
-      }
-    });
-    cb.onCharacters(function(chars) {
-      currChars += chars;
-    });
-    cb.onError(function(error) {
-      callback(error);
-    });
+function writePolygonInfo(fileName, t, out, callback) {
+  var parser = new expat.Parser("UTF-8");
+  var inPlacemark, currChars, currStyle, cnt = 0;
+
+  parser.addListener('startElement', function(elem, attrs) {
+    currChars = '';
+    if ('Placemark' === elem) {
+      inPlacemark = true;
+    }
   });
-  console.log('Starting parser for '+file);
-  parser.parseFile(file);
+  parser.addListener('endElement', function(elem) {
+    if ('styleUrl' === elem && inPlacemark) {
+      currStyle = currChars;
+    } else if ('coordinates' === elem && inPlacemark) {
+      writePolygon(out, parsePolygon(currChars), t, currStyle);
+      console.log('polygon '+(++cnt));
+    } else if ('Placemark' === elem) {
+      inPlacemark = false;
+    } else if ('kml' === elem) {
+      callback();
+    }
+  });
+  parser.addListener('text', function(chars) {
+    currChars += chars;
+  });
+  console.log('Starting parser for '+fileName);
+  var stream = fs.createReadStream(fileName);
+  stream.addListener('data', function(data) {
+    parser.parse(data, false);    
+  });
 }
 
-tileInit(destPath, levels, function(err) {
+var files = fs.readdirSync(srcPath);
+for (var i=files.length - 1 ; i>=0 ; i--) {
+  if (!files[i].match(/\.kml$/)) {
+    files.splice(i, 1);
+  } else {
+    files[i] = srcPath + '/' + files[i];
+  }
+}
+/*tileInit(destPath, levels, files.length, function(err) {
   if (err) console.log(err);
-  else {
-    var out = fs.createWriteStream("/tmp/tiles.txt");
-    writePolygonInfo(out, function(err) {
-      if (err) console.log(err);
-      else {
-        out.end();
-        console.log('Passing the torch to Clojure')
-        var clj = spawn('clj', [__dirname + '/draw_tiles.clj', '/tmp/tiles.txt'])
-        clj.on('exit', function(code) {
-          console.log('clj exited with code ' + code);
+  else {*/
+    var t = 0;
+    var genNext = function() {
+      if (files.length == 0) return;
+      var file = files.shift();
+      if (file === 'README.md') { 
+        genNext();
+      } else {
+        var tmpFileName = "/tmp/tiles_"+files.length+"_.txt";
+        var out = fs.createWriteStream(tmpFileName);
+        console.log('Processing '+file+' (tmp: '+tmpFileName+')');
+        writePolygonInfo(file, t, out, function(err) {
+          if (err) console.log(err);
+          else {
+            out.end();
+            console.log('Passing the torch to Clojure')
+            var clj = spawn('clj', [__dirname + '/draw_tiles.clj', tmpFileName])
+            clj.on('exit', function(code) {
+              console.log('clj exited with code ' + code);
+              t++;
+              genNext();
+            });
+          }
         });
       }
-    });
-  }
-});
+    }
+    
+    genNext();
+/*  }
+});*/
 
