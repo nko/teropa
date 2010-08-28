@@ -1,3 +1,6 @@
 [submodule "vendor/connect"]
 	path = vendor/connect
 	url = http://github.com/senchalabs/connect.git
+[submodule "vendor/node-xml"]
+	path = vendor/node-xml
+	url = http://github.com/robrighter/node-xml.git
