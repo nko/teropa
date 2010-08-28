@@ -14,6 +14,14 @@ var levels = [1, 2, 3, 4, 5, 6, 7];
 var tileSize = 256;
 var worldBounds = [-2.0037508342789244E7, -2.0037508342789244E7, 2.0037508342789244E7, 2.0037508342789244E7];
 
+var styles = {
+    "#Style1": "96 0 0 180",
+    "#Style2": "128 0 0 180",
+    "#Style3": "149 0 0 180",
+    "#Style4": "160 0 0 180",
+    "#Style5": "176 0 0 180"
+};
+
 var file = __dirname + '/../data/control_00020_I.kml';
 
 function writePolygon(out, polygon, style) {
@@ -35,7 +43,7 @@ function writePolygon(out, polygon, style) {
               Math.round(polygonPixels[i][1] - y * tileSize)
             ]);
           }          
-          out.write(destPath + '/'+levels[z]+'/'+x+'/'+y+'.png '+pixelsInThisTile+"\n");
+          out.write(destPath + '/'+levels[z]+'/'+x+'/'+y+'.png '+(styles[style] || styles['#Style1'])+' '+pixelsInThisTile+"\n");
         }
       }
     }
