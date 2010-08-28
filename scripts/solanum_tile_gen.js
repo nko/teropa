@@ -4,7 +4,8 @@ require.paths.unshift(__dirname + '/../vendor');
 
 var fs = require('fs')
   , xml = require('node-xml/lib/node-xml')
-  , tileInit = require('./tile_init');
+  , tileInit = require('./tile_init')
+  , util = require('./util');
 
 var destPath = __dirname + '/../public/tiles/solanum';
 var levels = [1, 2, 3, 4, 5, 6, 7];
@@ -12,14 +13,28 @@ var levels = [1, 2, 3, 4, 5, 6, 7];
 var file = __dirname + '/../data/control_00020_I.kml';
 
 function drawPolygon(polygon, style, callback) {
+  polygon = projectPolygon(polygon);
+  console.log(polygon);
   callback();
+}
+
+function projectPolygon(poly) {
+  var lon
+    , lat 
+    , res = []
+    , i = 0;
+  for (; i<poly.length ; i++) {
+    lon = util.toRad(poly[i][0]);
+    lat = util.toRad(poly[i][1]);
+    res.push(util.projectToGoogleMercator(lon, lat));
+  }
+  return res;
 }
 
 function parsePolygon(str) {
   var pts = str.split(' ')
     , res = []
     , i = 0;
-  
   for (; i<pts.length ; i++) {
     res.push(pts[i].split(','));
   }
