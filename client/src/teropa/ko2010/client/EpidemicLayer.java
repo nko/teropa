@@ -21,10 +21,13 @@ public class EpidemicLayer extends OpenStreetMapLayer {
 	}
 	
 	public void setTimestep(int timeStep) {
+		boolean chg = timeStep != this.timeStep;
 		this.timeStep = timeStep;
-		super.onAllTilesDeactivated();
-		context.getView().draw(true);
-		super.onTilesActivated(tiles);
+		if (chg) {
+			super.onAllTilesDeactivated();
+			context.getView().draw(true);
+			super.onTilesActivated(tiles);
+		}
 	}
 	
 	@Override

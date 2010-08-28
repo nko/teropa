@@ -22,6 +22,8 @@ public class Client implements EntryPoint {
 	
 	private final RootLayoutPanel root = RootLayoutPanel.get();
 	
+	public static final int NUM_STEPS = 40;
+	
 	public void onModuleLoad() {
 		resources.style().ensureInjected();
 		

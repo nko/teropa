@@ -10,5 +10,29 @@
 	\-moz-border-radius: 25px;
 	\-webkit-border-radius: 25px;
 	border-radius: 25px;
-	padding: 10px 25px;
+	padding: 10px 5px 10px 25px;
+}
+
+.SliderTrack {
+	width: 90%;
+	height: 27px;
+	float: left;
+}
+
+.SliderTrackBg {
+	width: 100%;
+	height: 5px;
+	background-color: #ddd;
+}
+.SliderKnob {
+	width: 10px;
+	height: 27px;
+	background-color: red;
+}
+
+.TimeControlInfo {
+	width: 10%;
+	float: left;
+	text-align: center;
+	font-size: 2em;
 }
