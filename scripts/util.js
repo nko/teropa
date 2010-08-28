@@ -39,8 +39,8 @@ function translatePolygonToPixels(polygon, bounds, pixelSize) {
   
   for (var i=0 ; i<polygon.length ; i++) {
     var pt = polygon[i];
-    var fromLeft = pt[0] - bounds[0];
-    var fromTop = pt[1] - bounds[1];
+    var fromLeft = pt[0] - bounds[1];
+    var fromTop = bounds[3] - pt[1];
     res.push([fromLeft * widthRatio, fromTop * heightRatio]);
   }
   return res;
