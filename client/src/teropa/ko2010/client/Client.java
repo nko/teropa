@@ -30,6 +30,9 @@ public class Client implements EntryPoint {
 		OpenStreetMapLayer base = new OpenStreetMapLayer("http://tile.openstreetmap.org/", "Mapnik", true);
 		map.addLayer(base);
 		
+		OpenStreetMapLayer solanum = new OpenStreetMapLayer(GWT.getHostPageBaseURL() + "tiles/solanum", "Solanum", false);
+		map.addLayer(solanum);
+		
 		map.addControl(new Panner(), Position.TOP_LEFT);
 		map.addControl(new Zoomer(), Position.MIDDLE_LEFT);
 		map.addControl(new CopyrightText(initCopyrightText()), Position.BOTTOM_LEFT);
