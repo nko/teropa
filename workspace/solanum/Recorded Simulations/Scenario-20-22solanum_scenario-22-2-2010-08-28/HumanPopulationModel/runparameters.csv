@@ -1,0 +1,2 @@
+populationIdentifier,name,birthRate,deathRate,timePeriod
+human,HumanPopulationModel,0.0,0.0,86400000
