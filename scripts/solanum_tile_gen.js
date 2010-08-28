@@ -14,29 +14,48 @@ var worldBounds = [-2.0037508342789244E7, -2.0037508342789244E7, 2.0037508342789
 
 var file = __dirname + '/../data/control_00020_I.kml';
 
-function drawPolygon(polygon, style, callback) {
+function writePolygon(out, polygon, style, callback) {
   polygon = projectPolygon(polygon);
   var gridSize = Math.pow(2, levels[0]);
   var pixelSize = gridSize * tileSize;
   var polygonPixels = util.translatePolygonToPixels(polygon, worldBounds, pixelSize);
   var polygonBbox = util.getPolygonBBox(polygonPixels);
-  for (var x=0 ; x<gridSize ; x++) {
-    for (var y=0 ; y<gridSize ; y++) {
-      var bbox = [x*tileSize, y*tileSize, (x+1)*tileSize, (y+1)*tileSize];
-      if (!!util.intersection(polygonBbox, bbox)) {
-        var pixelsInThisTile = []
-        for (var i=0 ; i<polygonPixels.length ; i++) {
-          pixelsInThisTile.push([
-            Math.round(polygonPixels[i][0] - x * tileSize),
-            Math.round(polygonPixels[i][1] - y * tileSize)
-          ]);
-        }
-        console.log('draw '+pixelsInThisTile);
+  
+  var x=0, y=0;
+  
+  var maybeDrawNext = function() {
+    if (y > gridSize - 1) {
+      if (x > gridSize - 1) {
+        callback();
+      } else {
+        x++;
+        drawNext();
       }
+    } else {
+      y++;
+      drawNext();
+    }
+  };
+  
+  var drawNext = function() {    
+    var bbox = [x*tileSize, y*tileSize, (x+1)*tileSize, (y+1)*tileSize];
+    if (util.intersection(polygonBbox, bbox)) {
+      var pixelsInThisTile = []
+      for (var i=0 ; i<polygonPixels.length ; i++) {
+        pixelsInThisTile.push([
+          Math.round(polygonPixels[i][0] - x * tileSize),
+          Math.round(polygonPixels[i][1] - y * tileSize)
+        ]);
+      }
+      out.write('0/'+x+'/'+y+' '+pixelsInThisTile+"\n");
+      maybeDrawNext();
+    } else {
+      maybeDrawNext();
     }
   }
   
-  callback();
+  drawNext();
+  
 }
 
 function projectPolygon(poly) {
@@ -64,7 +83,7 @@ function parsePolygon(str) {
   return res;
 }
 
-function drawTiles() {
+function writePolygonInfo(out, callback) {
   var parser = new xml.SaxParser(function (cb) {
     var inPlacemark, currChars, currStyle;
     
@@ -79,8 +98,8 @@ function drawTiles() {
         currStyle = currChars;
       } else if ('coordinates' === elem && inPlacemark) {
         parser.pause();
-        drawPolygon(parsePolygon(currChars), currStyle, function(err) {
-          if (err) throw err;
+        writePolygon(out, parsePolygon(currChars), currStyle, function(err) {
+          if (err) callback(err);
           parser.resume();
         });
       } else if ('Placemark' === elem) {
@@ -90,7 +109,7 @@ function drawTiles() {
     cb.onCharacters(function(chars) {
       currChars += chars;
     });
-    
+    cb.onEndDocument(callback);
   });
   console.log('Starting parser for '+file);
   parser.parseFile(file);
@@ -99,7 +118,10 @@ function drawTiles() {
 tileInit(destPath, levels, function(err) {
   if (err) console.log(err);
   else {
-    drawTiles();
+    var out = fs.createWriteStream("/tmp/tiles.txt");
+    writePolygonInfo(out, function(err) {
+      out.end();
+    });
   }
 });
 
