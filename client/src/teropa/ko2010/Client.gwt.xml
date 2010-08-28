@@ -3,7 +3,8 @@
 
   <inherits name='com.google.gwt.user.User'/>
   <inherits name='com.google.gwt.user.theme.dark.Dark'/>
-
+  <inherits name='teropa.globetrotter.GlobeTrotter'/>
+  
   <entry-point class='teropa.ko2010.client.Client'/>
 
 </module>
