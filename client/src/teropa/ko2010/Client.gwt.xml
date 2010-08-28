@@ -4,6 +4,7 @@
   <inherits name='com.google.gwt.user.User'/>
   <inherits name='com.google.gwt.user.theme.dark.Dark'/>
   <inherits name='teropa.globetrotter.GlobeTrotter'/>
+  <inherits name='com.allen_sauer.gwt.dnd.gwt-dnd'/>
   
   <entry-point class='teropa.ko2010.client.Client'/>
 
