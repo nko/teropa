@@ -23,8 +23,9 @@ public class Client implements EntryPoint {
 		resources.style().ensureInjected();
 		
 		final Map map = new Map("100%", "100%");
-		map.setResolutions(OpenStreetMapLayer.SUPPORTED_RESOLUTIONS);
 		map.setMaxExtent(GoogleMercator.MAX_EXTENT);
+		map.setResolutions(getResolutions(), 2);
+		
 		
 		OpenStreetMapLayer base = new OpenStreetMapLayer("http://tile.openstreetmap.org/", "Mapnik", true);
 		map.addLayer(base);
@@ -41,6 +42,14 @@ public class Client implements EntryPoint {
 				RootLayoutPanel.get().onResize();
 			}
 		});
+	}
+
+	private double[] getResolutions() {
+		double[] resolutions = new double[7];
+		for (int i=0, r=1 ; i < 7 ; i++, r++) {
+			resolutions[i] = OpenStreetMapLayer.SUPPORTED_RESOLUTIONS[r];
+		}
+		return resolutions;
 	}
 
 	private HTML initCopyrightText() {
