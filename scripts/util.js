@@ -30,5 +30,54 @@ function projectToGoogleMercator(lon, lat) {
   return [x, y];
 }
 
+function translatePolygonToPixels(polygon, bounds, pixelSize) {
+  var res = [];
+  var boundsWidth = bounds[2] - bounds[0];
+  var boundsHeight = bounds[3] - bounds[1];
+//  console.log("w: "+boundsWidth);
+//  console.log("h: "+boundsHeight);
+  var widthRatio = pixelSize / boundsWidth;
+  var heightRatio = pixelSize / boundsHeight;
+//  console.log("wr: "+widthRatio);
+//  console.log("hr: "+heightRatio);
   
-module.exports = {cp: cp, toRad: toRad, projectToGoogleMercator: projectToGoogleMercator};
+  for (var i=0 ; i<polygon.length ; i++) {
+    var pt = polygon[i];
+    var fromLeft = pt[0] - bounds[0];
+    var fromTop = pt[1] - bounds[1];
+//    console.log('l: '+Math.round(fromLeft * widthRatio));
+//    console.log('t: '+Math.round(fromTop * widthRatio));
+    res.push([fromLeft * widthRatio, fromTop * heightRatio]);
+  }
+  return res;
+}
+
+function getPolygonBBox(polygon) {
+  var minX = Number.MAX_VALUE
+    , minY = Number.MAX_VALUE
+    , maxX = Number.MIN_VALUE
+    , maxY = Number.MIN_VALUE;
+  
+  for (var i=0 ; i<polygon.length ; i++) {
+    var pt = polygon[i];
+    if (pt[0] < minX) minX = pt[0];
+    if (pt[0] > maxX) maxX = pt[0];
+    if (pt[1] < minY) minY = pt[1];
+    if (pt[1] > maxY) maxY = pt[1];
+  }
+  
+  return [minX, minY, maxX, maxY];
+}
+
+function intersection(lhs, rhs) {
+  return lhs[0] < rhs[2] && lhs[2] > rhs[0] && lhs[1] < rhs[3] && lhs[3] > rhs[1];  
+}
+
+module.exports = {
+  cp: cp
+ ,toRad: toRad
+ ,projectToGoogleMercator: projectToGoogleMercator
+ ,translatePolygonToPixels: translatePolygonToPixels
+ ,getPolygonBBox: getPolygonBBox
+ ,intersection: intersection
+};
