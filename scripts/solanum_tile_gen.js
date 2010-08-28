@@ -18,7 +18,8 @@ var file = __dirname + '/../data/control_00020_I.kml';
 
 function writePolygon(out, polygon, style) {
   polygon = projectPolygon(polygon);
-  for (var z=0 ; z<1 ; z++) {
+  
+  for (var z=0 ; z<levels.length ; z++) {
     var gridSize = Math.pow(2, levels[z]);
     var pixelSize = gridSize * tileSize;
     var polygonPixels = util.translatePolygonToPixels(polygon, worldBounds, pixelSize);
@@ -68,7 +69,7 @@ function parsePolygon(str) {
 
 function writePolygonInfo(out, callback) {
   var parser = new xml.SaxParser(function (cb) {
-    var inPlacemark, currChars, currStyle;
+    var inPlacemark, currChars, currStyle, cnt = 0;
     
     cb.onStartElementNS(function(elem, attrs, prefix, uri, namespace) {
       currChars = '';
@@ -81,6 +82,7 @@ function writePolygonInfo(out, callback) {
         currStyle = currChars;
       } else if ('coordinates' === elem && inPlacemark) {
         writePolygon(out, parsePolygon(currChars), currStyle);
+        console.log('polygon '+(++cnt));
       } else if ('Placemark' === elem) {
         inPlacemark = false;
       } else if ('kml' === elem) {

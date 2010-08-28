@@ -1,14 +1,16 @@
 (use 'clojure.contrib.duck-streams)
 (import '(javax.imageio ImageIO))
 
-(def file (first *command-line-args*))
+(def cntr (atom 0))
 
 (defn to-int-arr [strs]
   (into-array
     Integer/TYPE
     (map #(Integer/valueOf %) strs)))
-    
-(doseq [line (read-lines file)]
+   
+(doseq [line (read-lines "/tmp/tiles.txt")]
+  (swap! cntr inc)
+  (println "Drawing" @cntr)
   (let [[tile poly] (.split line " ")
   		img-file (java.io.File. tile)
   		img (ImageIO/read img-file)
