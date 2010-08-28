@@ -10,6 +10,7 @@ import teropa.globetrotter.client.proj.GoogleMercator;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.HTML;
@@ -19,6 +20,8 @@ public class Client implements EntryPoint {
 
 	public final Resources resources = GWT.create(Resources.class);
 	
+	private final RootLayoutPanel root = RootLayoutPanel.get();
+	
 	public void onModuleLoad() {
 		resources.style().ensureInjected();
 		
@@ -26,23 +29,27 @@ public class Client implements EntryPoint {
 		map.setMaxExtent(GoogleMercator.MAX_EXTENT);
 		map.setResolutions(getResolutions(), 2);
 		
-		
 		OpenStreetMapLayer base = new OpenStreetMapLayer("http://tile.openstreetmap.org/", "Mapnik", true);
 		map.addLayer(base);
 		
-		OpenStreetMapLayer solanum = new OpenStreetMapLayer(GWT.getHostPageBaseURL() + "tiles/solanum", "Solanum", false);
+		EpidemicLayer solanum = new EpidemicLayer(GWT.getHostPageBaseURL() + "tiles/solanum", "Solanum", false);
 		map.addLayer(solanum);
 		
 		map.addControl(new Panner(), Position.TOP_LEFT);
 		map.addControl(new Zoomer(), Position.MIDDLE_LEFT);
 		map.addControl(new CopyrightText(initCopyrightText()), Position.BOTTOM_LEFT);
 		
-		RootLayoutPanel.get().add(map);
+		root.add(map);
+		
+		TimeControl tc = new TimeControl(solanum);
+		root.add(tc);
+		root.setWidgetBottomHeight(tc, 30, Unit.PX, 50, Unit.PX);
+		root.setWidgetLeftRight(tc, 50, Unit.PX, 50, Unit.PX);
 		
 		// TODO: Find out why we need to do this
 		DeferredCommand.addCommand(new Command() {
 			public void execute() {
-				RootLayoutPanel.get().onResize();
+				root.onResize();
 			}
 		});
 	}
