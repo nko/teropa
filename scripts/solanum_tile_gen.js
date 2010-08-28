@@ -16,49 +16,29 @@ var worldBounds = [-2.0037508342789244E7, -2.0037508342789244E7, 2.0037508342789
 
 var file = __dirname + '/../data/control_00020_I.kml';
 
-function writePolygon(out, polygon, style, callback) {
+function writePolygon(out, polygon, style) {
   polygon = projectPolygon(polygon);
-  var gridSize = Math.pow(2, levels[0]);
-  var pixelSize = gridSize * tileSize;
-  var polygonPixels = util.translatePolygonToPixels(polygon, worldBounds, pixelSize);
-  var polygonBbox = util.getPolygonBBox(polygonPixels);
-  
-  var x=0, y=0;
-  
-  var maybeDrawNext = function() {
-    if (y > gridSize - 1) {
-      if (x > gridSize - 1) {
-        callback();
-      } else {
-        x++;
-        drawNext();
+  for (var z=0 ; z<1 ; z++) {
+    var gridSize = Math.pow(2, levels[z]);
+    var pixelSize = gridSize * tileSize;
+    var polygonPixels = util.translatePolygonToPixels(polygon, worldBounds, pixelSize);
+    var polygonBbox = util.getPolygonBBox(polygonPixels);
+    for (var x=0 ; x<gridSize ; x++) {
+      for (var y=0 ; y<gridSize ; y++) {
+        var bbox = [x*tileSize, y*tileSize, (x+1)*tileSize, (y+1)*tileSize];
+        if (util.intersection(polygonBbox, bbox)) {
+          var pixelsInThisTile = []
+          for (var i=0 ; i<polygonPixels.length ; i++) {
+            pixelsInThisTile.push([
+              Math.round(polygonPixels[i][0] - x * tileSize),
+              Math.round(polygonPixels[i][1] - y * tileSize)
+            ]);
+          }          
+          out.write(destPath + '/'+levels[z]+'/'+x+'/'+y+'.png '+pixelsInThisTile+"\n");
+        }
       }
-    } else {
-      y++;
-      drawNext();
-    }
-  };
-  
-  var drawNext = function() {    
-    var bbox = [x*tileSize, y*tileSize, (x+1)*tileSize, (y+1)*tileSize];
-    if (util.intersection(polygonBbox, bbox)) {
-      var pixelsInThisTile = []
-      for (var i=0 ; i<polygonPixels.length ; i++) {
-        pixelsInThisTile.push([
-          Math.round(polygonPixels[i][0] - x * tileSize),
-          Math.round(polygonPixels[i][1] - y * tileSize)
-        ]);
-      }
-      
-      out.write(destPath + '/1/'+x+'/'+y+'.png '+pixelsInThisTile+"\n");
-      maybeDrawNext();
-    } else {
-      maybeDrawNext();
     }
   }
-  
-  drawNext();
-  
 }
 
 function projectPolygon(poly) {
@@ -100,9 +80,7 @@ function writePolygonInfo(out, callback) {
       if ('styleUrl' === elem && inPlacemark) {
         currStyle = currChars;
       } else if ('coordinates' === elem && inPlacemark) {
-        writePolygon(out, parsePolygon(currChars), currStyle, function(err) {
-          if (err) callback(err);
-        });
+        writePolygon(out, parsePolygon(currChars), currStyle);
       } else if ('Placemark' === elem) {
         inPlacemark = false;
       } else if ('kml' === elem) {
