@@ -34,19 +34,13 @@ function translatePolygonToPixels(polygon, bounds, pixelSize) {
   var res = [];
   var boundsWidth = bounds[2] - bounds[0];
   var boundsHeight = bounds[3] - bounds[1];
-//  console.log("w: "+boundsWidth);
-//  console.log("h: "+boundsHeight);
   var widthRatio = pixelSize / boundsWidth;
   var heightRatio = pixelSize / boundsHeight;
-//  console.log("wr: "+widthRatio);
-//  console.log("hr: "+heightRatio);
   
   for (var i=0 ; i<polygon.length ; i++) {
     var pt = polygon[i];
     var fromLeft = pt[0] - bounds[0];
     var fromTop = pt[1] - bounds[1];
-//    console.log('l: '+Math.round(fromLeft * widthRatio));
-//    console.log('t: '+Math.round(fromTop * widthRatio));
     res.push([fromLeft * widthRatio, fromTop * heightRatio]);
   }
   return res;

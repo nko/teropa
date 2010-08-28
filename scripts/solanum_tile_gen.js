@@ -3,6 +3,8 @@
 require.paths.unshift(__dirname + '/../vendor');
 
 var fs = require('fs')
+  , sys = require('sys')
+  , spawn = require('child_process').spawn
   , xml = require('node-xml/lib/node-xml')
   , tileInit = require('./tile_init')
   , util = require('./util');
@@ -47,7 +49,8 @@ function writePolygon(out, polygon, style, callback) {
           Math.round(polygonPixels[i][1] - y * tileSize)
         ]);
       }
-      out.write('0/'+x+'/'+y+' '+pixelsInThisTile+"\n");
+      
+      out.write(destPath + '/1/'+x+'/'+y+'.png '+pixelsInThisTile+"\n");
       maybeDrawNext();
     } else {
       maybeDrawNext();
@@ -97,19 +100,21 @@ function writePolygonInfo(out, callback) {
       if ('styleUrl' === elem && inPlacemark) {
         currStyle = currChars;
       } else if ('coordinates' === elem && inPlacemark) {
-        parser.pause();
         writePolygon(out, parsePolygon(currChars), currStyle, function(err) {
           if (err) callback(err);
-          parser.resume();
         });
       } else if ('Placemark' === elem) {
         inPlacemark = false;
+      } else if ('kml' === elem) {
+        callback();
       }
     });
     cb.onCharacters(function(chars) {
       currChars += chars;
     });
-    cb.onEndDocument(callback);
+    cb.onError(function(error) {
+      callback(error);
+    });
   });
   console.log('Starting parser for '+file);
   parser.parseFile(file);
@@ -120,7 +125,15 @@ tileInit(destPath, levels, function(err) {
   else {
     var out = fs.createWriteStream("/tmp/tiles.txt");
     writePolygonInfo(out, function(err) {
-      out.end();
+      if (err) console.log(err);
+      else {
+        out.end();
+        console.log('Passing the torch to Clojure')
+        var clj = spawn('clj', [__dirname + '/draw_tiles.clj', '/tmp/tiles.txt'])
+        clj.on('exit', function(code) {
+          console.log('clj exited with code ' + code);
+        });
+      }
     });
   }
 });
