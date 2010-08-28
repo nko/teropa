@@ -1,10 +1,12 @@
-var http = require('http');
+require.paths.unshift(__dirname + '/../vendor');
+var connect = require('connect/lib/connect');
 
 function start() {
-  http.createServer(function (req, res) {
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.end('Hello World\n');
-  }).listen(80);
+  connect.createServer(
+    connect.logger(),
+    connect.staticProvider(__dirname + '/../public')
+  ).listen(8124);
+  console.log('Started')
 }
 
 module.exports = start;
