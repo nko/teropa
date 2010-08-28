@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.eclipse.stem.diseasemodels.standard:DeterministicSIDiseaseModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:org.eclipse.stem.diseasemodels.standard="http:///org/eclipse/stem/diseasemodels/standard.ecore" uRI="platform:/resource/solanum/decorators/solanum_disease.standard" typeURI="stemtype://org.eclipse.stem/identifiable8" diseaseName="solanum_disease" transmissionRate="1.2">
+  <dublinCore title="Disease &quot;solanum_disease&quot;" identifier="platform:/resource/solanum/decorators/solanum_disease.standard" description="Disease &quot;solanum_disease&quot;" creator="teroparv" format="http:///org/eclipse/stem/diseasemodels/standard.ecore" type="stemtype://org.eclipse.stem/identifiable8" created="2010-08-28"/>
+</org.eclipse.stem.diseasemodels.standard:DeterministicSIDiseaseModel>

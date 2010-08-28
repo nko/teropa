@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.eclipse.stem.populationmodels.standard:StandardPopulationModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:org.eclipse.stem.populationmodels.standard="http:///org/eclipse/stem/populationmodels/standard" uRI="platform:/resource/solanum/decorators/solanum_pop.standard" typeURI="stemtype://org.eclipse.stem/identifiable4">
+  <dublinCore title="Standard Population Model" identifier="platform:/resource/solanum/decorators/solanum_pop.standard" description="Standard Population Model" creator="teroparv" format="http:///org/eclipse/stem/populationmodels/standard" type="stemtype://org.eclipse.stem/identifiable4" created="2010-08-28"/>
+</org.eclipse.stem.populationmodels.standard:StandardPopulationModel>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.eclipse.stem.core.model:Model xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:org.eclipse.stem.core.model="http:///org/eclipse/stem/core/model.ecore" uRI="platform:/resource/solanum/models/solanum_model.model" typeURI="stemtype://org.eclipse.stem/Model">
+  <dublinCore title="Model &quot;solanum_model&quot;" identifier="platform:/resource/solanum/models/solanum_model.model" description="Model &quot;solanum_model&quot;" creator="teroparv" format="http:///org/eclipse/stem/core/model.ecore" type="stemtype://org.eclipse.stem/Model" created="2010-08-28"/>
+  <models href="platform:/resource/GlobalGeography/models/Earth_0_1_2.model#/"/>
+  <models href="platform:/resource/GlobalGeography/models/AirTransportModel.model#/"/>
+  <nodeDecorators href="platform:/resource/solanum/decorators/solanum_disease.standard#/"/>
+  <nodeDecorators href="platform:/resource/solanum/decorators/solanum_pop.standard#/"/>
+</org.eclipse.stem.core.model:Model>

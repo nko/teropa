@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.eclipse.stem.core.sequencer:SequentialSequencer xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:org.eclipse.stem.core.sequencer="http:///org/eclipse/stem/core/sequencer.ecore" uRI="platform:/resource/solanum/sequencers/solanum_sequencer.sequencer" typeURI="stemtype://org.eclipse.stem/identifiable2">
+  <dublinCore title="Sequential Sequencer (Start: 2010-08-28, Cycle Period: 1 day)." identifier="platform:/resource/solanum/sequencers/solanum_sequencer.sequencer" description="Sequential Sequencer starting from 2010-08-28, with no end and a cycle period of 1 day." creator="teroparv" format="http:///org/eclipse/stem/core/sequencer.ecore" type="stemtype://org.eclipse.stem/identifiable2" created="2010-08-28" valid="start=2010-08-28;"/>
+  <startTime time="2010-08-28T12:00:00.740+0300"/>
+</org.eclipse.stem.core.sequencer:SequentialSequencer>
