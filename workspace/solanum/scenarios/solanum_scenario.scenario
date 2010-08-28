@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.eclipse.stem.core.scenario:Scenario xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:org.eclipse.stem.core.scenario="http:///org/eclipse/stem/core/scenario.ecore" xmlns:org.eclipse.stem.core.sequencer="http:///org/eclipse/stem/core/sequencer.ecore" xmlns:org.eclipse.stem.solvers.fd="http:///org/eclipse/stem/solvers/fd" uRI="platform:/resource/solanum/scenarios/solanum_scenario.scenario" typeURI="stemtype://org.eclipse.stem/Scenario">
+  <dublinCore title="Scenario &quot;solanum_scenario&quot;" identifier="platform:/resource/solanum/scenarios/solanum_scenario.scenario" description="Scenario &quot;solanum_scenario&quot;" creator="teroparv" format="http:///org/eclipse/stem/core/scenario.ecore" type="stemtype://org.eclipse.stem/Scenario" created="2010-08-28"/>
+  <model href="platform:/resource/solanum/models/solanum_model.model#/"/>
+  <sequencer xsi:type="org.eclipse.stem.core.sequencer:SequentialSequencer" href="platform:/resource/solanum/sequencers/solanum_sequencer.sequencer#/"/>
+  <scenarioDecorators href="platform:/resource/solanum/decorators/solanum_infector.standard#/"/>
+  <solver xsi:type="org.eclipse.stem.solvers.fd:FiniteDifference" uRI="stem://org.eclipse.stem/identifiable81768" typeURI="stemtype://org.eclipse.stem/identifiable81768">
+    <dublinCore identifier="stem://org.eclipse.stem/identifiable81768" type="stemtype://org.eclipse.stem/identifiable81768"/>
+  </solver>
+</org.eclipse.stem.core.scenario:Scenario>
