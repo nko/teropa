@@ -1,0 +1,3 @@
+[submodule "vendor/connect"]
+	path = vendor/connect
+	url = http://github.com/senchalabs/connect.git
