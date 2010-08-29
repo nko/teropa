@@ -7,3 +7,6 @@
 [submodule "vendor/gm"]
 	path = vendor/gm
 	url = http://github.com/aheckmann/gm.git
+[submodule "vendor/node-temp"]
+	path = vendor/node-temp
+	url = http://github.com/bruce/node-temp.git
