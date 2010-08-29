@@ -5,6 +5,8 @@ import teropa.globetrotter.client.common.Position;
 import teropa.globetrotter.client.controls.CopyrightText;
 import teropa.globetrotter.client.controls.Panner;
 import teropa.globetrotter.client.controls.Zoomer;
+import teropa.globetrotter.client.event.internal.ViewClickEvent;
+import teropa.globetrotter.client.event.internal.ViewPanEvent;
 import teropa.globetrotter.client.osm.OpenStreetMapLayer;
 import teropa.globetrotter.client.proj.GoogleMercator;
 
@@ -13,6 +15,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -49,7 +52,7 @@ public class Client implements EntryPoint {
 		final Map map = new Map("100%", "100%");
 		map.setMaxExtent(GoogleMercator.MAX_EXTENT);
 		map.setResolutions(getResolutions(), 2);
-		
+					
 		OpenStreetMapLayer base = new OpenStreetMapLayer(GWT.getHostPageBaseURL() + "tiles/osm", "Mapnik", true);
 		map.addLayer(base);
 		

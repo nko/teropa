@@ -37,7 +37,7 @@ module.exports = function(z, x, y, req, res, callback) {
       upstreamRes.on('end', function() {
         releaseClient(client);
 
-        var tmpFile = '/tmp/solanum_tile_'+(Math.random() * new Date().getTime());
+        var tmpFile = '/tmp/solanum_tile_'+(Math.random() * new Date().getTime()+".png");
         var out = fs.createWriteStream(tmpFile);
         var w = function() {
           if (chunks.length > 0) {
