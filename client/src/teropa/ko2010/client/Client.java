@@ -72,6 +72,7 @@ public class Client implements EntryPoint {
 
 	private void initLeft(DockLayoutPanel dock) {
 		Label left = new Label("Left");
+		left.setStyleName("LeftPanel");
 		dock.addWest(left, 200);
 	}
 

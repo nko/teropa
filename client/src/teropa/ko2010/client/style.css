@@ -3,9 +3,12 @@
 	font-size: 0.8em;
 }
 .copy, .copy a, .copy a:hover, .copy a:active, .copy a:visited {
-	color: #333333;
+	color: #111111;
 }
 
+.LeftPanel {
+	border-right: 1px solid #999;
+}
 
 .TimeControl {
 	background-color: black;
@@ -21,6 +24,7 @@
 	width: 90%;
 	height: 27px;
 	float: left;
+	cursor: pointer;
 }
 
 .SliderTrackBg {
@@ -29,7 +33,7 @@
 	background-color: #888;
 }
 .SliderKnob {
-	width: 10px;
+	width: 8px;
 	height: 27px;
 	background-color: #33ccff;
 }
