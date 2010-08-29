@@ -1,7 +1,7 @@
 var url = require('url')
   , fs = require('fs')
   , base64 = require('base64')
-  , baseDir = __dirname + '/../public/tiles/solanum';
+  , baseDir = '/home/node/osm_tile_cache/tiles/solanum';
 
 function parseTiles(parms) {
   var tiles = []
