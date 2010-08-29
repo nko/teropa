@@ -3,6 +3,7 @@ require.paths.unshift(__dirname + '/../vendor');
 var connect = require('connect/lib/connect')
   , cacheHeaders = require('./cache_headers')
   , osmProxy = require('./osm_proxy')
+  , mxhrTileService = require('./mxhr_tile_service')
   , port = parseInt(process.env.port || 80);
 
 function routes(app) {
@@ -11,6 +12,9 @@ function routes(app) {
       , x = req.params.x
       , y = req.params.y;
     osmProxy(z, x, y, req, res, next);
+  });
+  app.get('/tiles/solanum/many', function (req, res, next) {
+    mxhrTileService(req, res, next);
   });
 }
 

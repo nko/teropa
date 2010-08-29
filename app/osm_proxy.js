@@ -24,6 +24,7 @@ function releaseClient(client) {
 }
 
 module.exports = function(z, x, y, req, res, callback) {
+  console.log('requesting OSM tile from backend: '+z+'/'+x+'/'+y);
   reserveClient(function (client) {
     var upstreamReq = client.request('GET', '/'+z+'/'+x+'/'+y+'.png', {
       'User-Agent': 'Caching tile proxy for application http://teropa.no.de/'
@@ -53,18 +54,22 @@ module.exports = function(z, x, y, req, res, callback) {
           } else {
             out.end();
             tileOminouser(tmpFile, function(err) {
-              if (err) throw err;
-              var finalStream = fs.createReadStream(tmpFile);
-              res.writeHead(upstreamRes.statusCode, { "Content-Length": fs.statSync(tmpFile).size });
-              finalStream.on('data', function(chunk) {
-                res.write(chunk, 'binary');
-              });
-              finalStream.on('end', function() {
+              if (err) {
                 res.end();
-                process.nextTick(function() {
-                  tileWriter(tmpFile, z, x, y);
-                })
-              });
+                callback();
+              } else {
+                var finalStream = fs.createReadStream(tmpFile);
+                res.writeHead(upstreamRes.statusCode, { "Content-Length": fs.statSync(tmpFile).size });
+                finalStream.on('data', function(chunk) {
+                  res.write(chunk, 'binary');
+                });
+                finalStream.on('end', function() {
+                  res.end();
+                  process.nextTick(function() {
+                    tileWriter(tmpFile, z, x, y);
+                  })
+                });
+              }
             });    
           }
         }
