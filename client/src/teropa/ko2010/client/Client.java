@@ -15,7 +15,6 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
@@ -26,6 +25,9 @@ public class Client implements EntryPoint {
 	public final Resources resources = GWT.create(Resources.class);
 	
 	private final RootLayoutPanel root = RootLayoutPanel.get();
+	private Map map;
+	private EpidemicLayer solanum;
+	private TimeControl tc;
 	
 	public static final int NUM_STEPS = 26;
 	
@@ -48,7 +50,7 @@ public class Client implements EntryPoint {
 	private void initMain(DockLayoutPanel dock) {
 		LayoutPanel mainPanel = new LayoutPanel();
 		
-		final Map map = new Map("100%", "100%");
+		map = new Map("100%", "100%");
 		map.setMaxExtent(GoogleMercator.MAX_EXTENT);
 		map.setResolutions(getResolutions(), 1);
 		map.setCenter(new LonLat(391357.58482, 5476196.443835));
@@ -56,7 +58,7 @@ public class Client implements EntryPoint {
 		OpenStreetMapLayer base = new OpenStreetMapLayer(GWT.getHostPageBaseURL() + "tiles/osm", "Mapnik", true);
 		map.addLayer(base);
 		
-		EpidemicLayer solanum = new EpidemicLayer(GWT.getHostPageBaseURL() + "tiles/solanum", "Solanum", false);
+		solanum = new EpidemicLayer(GWT.getHostPageBaseURL() + "tiles/solanum", "Solanum", false);
 		map.addLayer(solanum);
 		
 		map.addControl(new Panner(), Position.TOP_LEFT);
@@ -65,7 +67,13 @@ public class Client implements EntryPoint {
 		
 		mainPanel.add(map);
 		
-		TimeControl tc = new TimeControl(solanum);
+		
+//		map.getView().addViewClickHandler(new ViewClickEvent.Handler() {
+//			public void onViewClicked(ViewClickEvent event) {
+//				Window.alert(map.calc().getLonLat(event.point).toString());
+//			}
+//		});
+		tc = new TimeControl(solanum);
 		mainPanel.add(tc);
 		mainPanel.setWidgetBottomHeight(tc, 30, Unit.PX, 50, Unit.PX);
 		mainPanel.setWidgetLeftRight(tc, 50, Unit.PX, 50, Unit.PX);
@@ -81,7 +89,7 @@ public class Client implements EntryPoint {
 		badge.setStyleName("koBadge");
 		left.addSouth(badge, 70);
 		
-		Info info = new Info();
+		Info info = new Info(this);
 		left.add(info);
 		
 		dock.addWest(left, 200);
@@ -99,6 +107,12 @@ public class Client implements EntryPoint {
 		HTML res = new HTML("(c) <a href=\"http://www.openstreetmap.org/\">OpenStreetMap</a> (and) contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>");
 		res.setStyleName("copy");
 		return res;
+	}
+
+	public void goToPatientZero() {
+		map.zoomTo(map.getResolutions().length - 1, new LonLat(11865472.774764482, 3458622.6558476537));
+		solanum.setTimestep(0);
+		tc.moveKnobToStep(0);
 	}
 	
 }

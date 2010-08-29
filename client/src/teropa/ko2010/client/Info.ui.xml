@@ -22,6 +22,12 @@
 			font-size: 1.1em;
 		}
 		
+		.patientZeroLink {
+			display: inline;
+			cursor: pointer;
+			text-decoration: underline;
+		}
+		
 	</ui:style>
 	<g:HTMLPanel>
 		<div class="{style.container}">
@@ -32,7 +38,9 @@
 			<p>
 				This is an attempt to track the zombie
 				outbreak, beginning from Patient Zero
-				<span class="{style.footnote}">(2010/08/04, Greater Chongqing, China)</span>
+				<span class="{style.footnote}">
+					(<g:Label ui:field="patientZeroLink" text="2010/08/04, Greater Chongqing, China" styleName="{style.patientZeroLink}"/>)
+					</span>
 				until the current situation of worldwide pandemic.
 			</p>
 			<p>

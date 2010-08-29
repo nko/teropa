@@ -14,7 +14,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Label;
 
 public class TimeControl extends Composite {
 
@@ -95,7 +94,7 @@ public class TimeControl extends Composite {
 		
 	}
 
-	private void moveKnobToStep(int step) {
+	void moveKnobToStep(int step) {
 		int stepWidth = sliderTrack.getOffsetWidth() / Client.NUM_STEPS;
 		sliderTrack.setWidgetPosition(sliderKnob, (int)(step * stepWidth + 0.5 * stepWidth - 0.5 * sliderKnob.getOffsetWidth()), sliderTrack.getWidgetTop(sliderKnob));
 		updateInfo(step);
