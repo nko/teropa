@@ -7,7 +7,6 @@ var connect = require('connect/lib/connect')
 
 function routes(app) {
   app.get('/tiles/osm/:z/:x/:y.png', function (req, res, next) {
-    console.log('osm hit');
     var z = req.params.z
       , x = req.params.x
       , y = req.params.y;
