@@ -62,5 +62,14 @@ a img {
 }
 
 .koBadge {
-	margin-left: 35px;
+	margin-left: 40px;
+}
+.tweetButton {
+	margin-left: 56px;
+}
+.like {
+	margin-left: 75px;
+}
+.src {
+	text-align: center;
 }

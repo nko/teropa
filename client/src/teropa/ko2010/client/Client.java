@@ -11,6 +11,7 @@ import teropa.globetrotter.client.proj.GoogleMercator;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
@@ -84,11 +85,23 @@ public class Client implements EntryPoint {
 	private void initLeft(DockLayoutPanel dock) {
 		DockLayoutPanel left = new DockLayoutPanel(Unit.PX);
 		left.setStyleName("LeftPanel");
+
+		HTML src = HTML.wrap(Document.get().getElementById("src"));
+		src.setStyleName("src");
+		left.addSouth(src, 30);
+
+		HTML like = HTML.wrap(Document.get().getElementById("fb"));
+		like.setStyleName("like");
+		left.addSouth(like, 30);
 		
-		HTML badge = new HTML("<a href=\"http://nodeknockout.com/teams/teropa\" target=\"nko\" title=\"Help me win Node.js KO!\"><img src=\"http://nodeknockout.com/images/voteko.png\" alt=\"Help me win Node.js KO!\" /></a>");
+		HTML tweet = HTML.wrap(Document.get().getElementById("twitter"));
+		tweet.setStyleName("tweetButton");
+		left.addSouth(tweet, 30);
+		
+		HTML badge = HTML.wrap(Document.get().getElementById("ko"));
 		badge.setStyleName("koBadge");
 		left.addSouth(badge, 70);
-		
+
 		Info info = new Info(this);
 		left.add(info);
 		
