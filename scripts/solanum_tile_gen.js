@@ -162,7 +162,7 @@ tileInit(destPath, levels, t, function(err) {
         console.log('Passing the torch to Clojure')
         var clj = spawn('clj', [__dirname + '/draw_tiles.clj', tmpFileName])
         clj.on('exit', function(code) {
-          console.log('clj exited with code ' + code);
+          if (code != 0) throw 'clj exited with code ' + code;
           if (continuation) {
             tmpFileName = "/tmp/tiles_"+(fileCnt++)+"_.txt";
             out = fs.createWriteStream(tmpFileName);
