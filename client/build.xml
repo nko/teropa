@@ -15,6 +15,7 @@
 			<arg value="${target.dir}"/>
 			<arg value="-style"/>
 			<arg value="obf"/>
+			<arg value="-XdisableCastChecking"/>
 			<arg value="${module.name}"/>
 			<jvmarg value="-Xmx1024m" />
 			<classpath refid="cp"/>
