@@ -8,6 +8,7 @@
 // 5 -> control_00011_I.kml
 // 6 -> control_00012_I.kml
 // 7 -> control_00013_I.kml
+// 8 -> control_00014_I.kml
 
 require.paths.unshift(__dirname + '/../vendor');
 
