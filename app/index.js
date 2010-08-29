@@ -18,6 +18,7 @@ function start() {
   connect.createServer(
     connect.logger(),
     cacheHeaders(),
+    connect.staticProvider('/home/node/osm_tile_cache'),
     connect.staticProvider(__dirname + '/../public'),
     connect.router(routes)
   ).listen(port);

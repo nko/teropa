@@ -3,6 +3,7 @@ var http = require('http')
   , sys = require('sys')
   , temp = require('node-temp/lib/temp')
   , tileOminouser = require('./tile_ominouser')
+  , tileWriter = require('./osm_tile_writer')
   , clients = [http.createClient(80, 'tile.openstreetmap.org'),
                http.createClient(80, 'tile.openstreetmap.org')];
 
@@ -60,6 +61,9 @@ module.exports = function(z, x, y, req, res, callback) {
               });
               finalStream.on('end', function() {
                 res.end();
+                process.nextTick(function() {
+                  tileWriter(tmpFile, z, x, y);
+                })
               });
             });    
           }
