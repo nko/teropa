@@ -11,7 +11,7 @@
 (defn read-polys []
   (map
   	#(.split % " ")
-  	(remove #(.isEmpty %) (.split (slurp* (first *command-line-args*)) "\n"))))
+  	(remove #(.isEmpty %) (read-lines (first *command-line-args*)))))
 
 (defn polys-grouped-by-tile []
   (reduce
