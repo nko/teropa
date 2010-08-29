@@ -13,7 +13,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
 public class Client implements EntryPoint {
@@ -26,6 +29,22 @@ public class Client implements EntryPoint {
 	
 	public void onModuleLoad() {
 		resources.style().ensureInjected();
+		
+		DockLayoutPanel dock = new DockLayoutPanel(Unit.PX);
+		initLeft(dock);
+		initMain(dock);
+		root.add(dock);
+		
+		// TODO: Find out why we need to do this
+		DeferredCommand.addCommand(new Command() {
+			public void execute() {
+				root.onResize();
+			}
+		});
+	}
+
+	private void initMain(DockLayoutPanel dock) {
+		LayoutPanel mainPanel = new LayoutPanel();
 		
 		final Map map = new Map("100%", "100%");
 		map.setMaxExtent(GoogleMercator.MAX_EXTENT);
@@ -41,19 +60,19 @@ public class Client implements EntryPoint {
 		map.addControl(new Zoomer(), Position.MIDDLE_LEFT);
 		map.addControl(new CopyrightText(initCopyrightText()), Position.BOTTOM_LEFT);
 		
-		root.add(map);
+		mainPanel.add(map);
 		
 		TimeControl tc = new TimeControl(solanum);
-		root.add(tc);
-		root.setWidgetBottomHeight(tc, 30, Unit.PX, 50, Unit.PX);
-		root.setWidgetLeftRight(tc, 50, Unit.PX, 50, Unit.PX);
+		mainPanel.add(tc);
+		mainPanel.setWidgetBottomHeight(tc, 30, Unit.PX, 50, Unit.PX);
+		mainPanel.setWidgetLeftRight(tc, 50, Unit.PX, 50, Unit.PX);
 		
-		// TODO: Find out why we need to do this
-		DeferredCommand.addCommand(new Command() {
-			public void execute() {
-				root.onResize();
-			}
-		});
+		dock.add(mainPanel);
+	}
+
+	private void initLeft(DockLayoutPanel dock) {
+		Label left = new Label("Left");
+		dock.addWest(left, 200);
 	}
 
 	private double[] getResolutions() {
