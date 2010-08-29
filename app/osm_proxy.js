@@ -24,59 +24,65 @@ function releaseClient(client) {
 }
 
 module.exports = function(z, x, y, req, res, callback) {
-  console.log('requesting OSM tile from backend: '+z+'/'+x+'/'+y);
-  reserveClient(function (client) {
-    var upstreamReq = client.request('GET', '/'+z+'/'+x+'/'+y+'.png', {
-      'User-Agent': 'Caching tile proxy for application http://teropa.no.de/'
-    });
-    
-    upstreamReq.on('response', function(upstreamRes) {
-      var chunks = [];
-      upstreamRes.on('data', function(chunk) {
-        chunks.push(chunk);
+  if (parseInt(x) > Math.pow(2, parseInt(z)) - 1 || parseInt(y) > Math.pow(2, parseInt(z)) - 1) {
+    console.log('disregarding nonexisting tile: '+z+'/'+x+'/'+y);
+    res.writeHead(404);
+    res.end();
+  } else {
+    console.log('requesting OSM tile from backend: '+z+'/'+x+'/'+y);
+    reserveClient(function (client) {
+      var upstreamReq = client.request('GET', '/'+z+'/'+x+'/'+y+'.png', {
+        'User-Agent': 'Caching tile proxy for application http://teropa.no.de/'
       });
-      upstreamRes.on('end', function() {
-        releaseClient(client);
-
-        var tmpFile = '/home/node/tmp/solanum_tile_'+(Math.random() * new Date().getTime()+".png");
-        var out = fs.createWriteStream(tmpFile);
-        var w = function() {
-          if (chunks.length > 0) {
-            if (out.write(chunks.shift())) {
-              w();
-            } else {
-              var l = function() {
-                out.removeListener('drain', l);
+      
+      upstreamReq.on('response', function(upstreamRes) {
+        var chunks = [];
+        upstreamRes.on('data', function(chunk) {
+          chunks.push(chunk);
+        });
+        upstreamRes.on('end', function() {
+          releaseClient(client);
+  
+          var tmpFile = '/home/node/tmp/solanum_tile_'+(Math.random() * new Date().getTime()+".png");
+          var out = fs.createWriteStream(tmpFile);
+          var w = function() {
+            if (chunks.length > 0) {
+              if (out.write(chunks.shift())) {
                 w();
-              }
-              out.addListener('drain', l);
-            }
-          } else {
-            out.end();
-            tileOminouser(tmpFile, function(err) {
-              if (err) {
-                res.writeHead(500);
-                res.end();
               } else {
-                var finalStream = fs.createReadStream(tmpFile);
-                res.writeHead(upstreamRes.statusCode, { "Content-Length": fs.statSync(tmpFile).size });
-                finalStream.on('data', function(chunk) {
-                  res.write(chunk, 'binary');
-                });
-                finalStream.on('end', function() {
-                  res.end();
-                  process.nextTick(function() {
-                    tileWriter(tmpFile, z, x, y);
-                  })
-                });
+                var l = function() {
+                  out.removeListener('drain', l);
+                  w();
+                }
+                out.addListener('drain', l);
               }
-            });    
+            } else {
+              out.end();
+              tileOminouser(tmpFile, function(err) {
+                if (err) {
+                  res.writeHead(500);
+                  res.end();
+                } else {
+                  var finalStream = fs.createReadStream(tmpFile);
+                  res.writeHead(upstreamRes.statusCode, { "Content-Length": fs.statSync(tmpFile).size });
+                  finalStream.on('data', function(chunk) {
+                    res.write(chunk, 'binary');
+                  });
+                  finalStream.on('end', function() {
+                    res.end();
+                    process.nextTick(function() {
+                      tileWriter(tmpFile, z, x, y);
+                    })
+                  });
+                }
+              });    
+            }
           }
-        }
-        w();
-        
+          w();
+          
+        });
       });
+      upstreamReq.end();
     });
-    upstreamReq.end();
-  });
+  }
 };
