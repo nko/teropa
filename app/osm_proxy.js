@@ -1,7 +1,6 @@
 var http = require('http')
   , fs = require('fs')
   , sys = require('sys')
-  , temp = require('node-temp/lib/temp')
   , tileOminouser = require('./tile_ominouser')
   , tileWriter = require('./osm_tile_writer')
   , clients = [http.createClient(80, 'tile.openstreetmap.org'),
