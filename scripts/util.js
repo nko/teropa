@@ -30,8 +30,22 @@ function projectToGoogleMercator(lon, lat) {
   return [x, y];
 }
 
+function wrapsDateLine(polygon, worldBounds) {
+  var worldWidth = worldBounds[2] - worldBounds[0];
+  var prev = polygon[0][0];
+  for (var i=1 ; i<polygon.length ; i++) {
+    var dist = polygon[i][0] - prev;
+    if (Math.abs(dist) > worldWidth / 2) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function translatePolygonToPixels(polygon, bounds, pixelSize) {
+  
   var res = [];
+  
   var boundsWidth = bounds[2] - bounds[0];
   var boundsHeight = bounds[3] - bounds[1];
   var widthRatio = pixelSize / boundsWidth;
@@ -74,4 +88,5 @@ module.exports = {
  ,translatePolygonToPixels: translatePolygonToPixels
  ,getPolygonBBox: getPolygonBBox
  ,intersection: intersection
+ ,wrapsDateLine: wrapsDateLine
 };

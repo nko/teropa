@@ -3,28 +3,24 @@ var fs = require('fs')
 
 var blankTile = __dirname + '/blank_tile.png';
 
-function mkTileDirs(destPath, numTs, levels) {
+function mkTileDirs(destPath, t, levels) {
   var t, z, x, y, size;
-  fs.mkdirSync(destPath, 0777);
-  for (t = 0 ; t<numTs ; t++) {
-    fs.mkdirSync(destPath + '/' + t, 0777);
-    for (z = 0 ; z<levels.length ; z++) {
-      size = Math.pow(2, levels[z]);
-      fs.mkdirSync(destPath + '/' + t + '/' + levels[z], 0777);
-      for (x = 0 ; x<size ; x++) {
-        fs.mkdirSync(destPath + '/' + t + '/' + levels[z] + '/' + x, 0777);
-      }
+  fs.mkdirSync(destPath + '/' + t, 0777);
+  for (z = 0 ; z<levels.length ; z++) {
+    size = Math.pow(2, levels[z]);
+    fs.mkdirSync(destPath + '/' + t + '/' + levels[z], 0777);
+    for (x = 0 ; x<size ; x++) {
+      fs.mkdirSync(destPath + '/' + t + '/' + levels[z] + '/' + x, 0777);
     }
   }
 }
 
-module.exports = function(destPath, levels, numTs, callback) {
-  var t = 0
-    , z = 0
+module.exports = function(destPath, levels, t, callback) {
+  var z = 0
     , x = 0
     , y = 0;
 
-  mkTileDirs(destPath, numTs, levels);
+  mkTileDirs(destPath, t, levels);
 
   var writeNext = function() {
     var tile = destPath + '/' + t + '/' + levels[z] + '/' + x + '/' + y + '.png';
@@ -36,13 +32,7 @@ module.exports = function(destPath, levels, numTs, callback) {
         if (y == currentSize - 1) {
           if (x == currentSize - 1) {
             if (z == levels.length - 1) {
-              if (t == numTs - 1) {
-                callback();
-              } else {
-                t++;
-                x = y = z = 0;
-                writeNext();
-              }
+              callback();
             } else {
               z++;
               x = y = 0;
