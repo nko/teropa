@@ -15,10 +15,8 @@ import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 
@@ -51,7 +49,7 @@ public class Client implements EntryPoint {
 		
 		final Map map = new Map("100%", "100%");
 		map.setMaxExtent(GoogleMercator.MAX_EXTENT);
-		map.setResolutions(getResolutions(), 2);
+		map.setResolutions(getResolutions(), 1);
 		map.setCenter(new LonLat(391357.58482, 5476196.443835));
 		
 		OpenStreetMapLayer base = new OpenStreetMapLayer(GWT.getHostPageBaseURL() + "tiles/osm", "Mapnik", true);
@@ -75,21 +73,22 @@ public class Client implements EntryPoint {
 	}
 
 	private void initLeft(DockLayoutPanel dock) {
-		Left left = new Left();
+		DockLayoutPanel left = new DockLayoutPanel(Unit.PX);
 		left.setStyleName("LeftPanel");
 		
-//		Image hand = new Image(GWT.getHostPageBaseURL() + "hand.jpg");
-//		hand.setStyleName("hand");
-//		left.add(hand);
-//		left.setWidgetTopHeight(hand, 0, Unit.PX, 126, Unit.PX);
-//		left.setWidgetLeftWidth(hand, 0, Unit.PX, 200, Unit.PX);
+		HTML badge = new HTML("<a href=\"http://nodeknockout.com/teams/teropa\" target=\"nko\" title=\"Help me win Node.js KO!\"><img src=\"http://nodeknockout.com/images/voteko.png\" alt=\"Help me win Node.js KO!\" /></a>");
+		badge.setStyleName("koBadge");
+		left.addSouth(badge, 70);
+		
+		Info info = new Info();
+		left.add(info);
 		
 		dock.addWest(left, 200);
 	}
 
 	private double[] getResolutions() {
 		double[] resolutions = new double[6];
-		for (int i=0, r=2 ; i < 7 ; i++, r++) {
+		for (int i=0, r=2 ; i < 6 ; i++, r++) {
 			resolutions[i] = OpenStreetMapLayer.SUPPORTED_RESOLUTIONS[r];
 		}
 		return resolutions;

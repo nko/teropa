@@ -21,6 +21,7 @@
 			color: white;
 			font-size: 1.1em;
 		}
+		
 	</ui:style>
 	<g:HTMLPanel>
 		<div class="{style.container}">
@@ -39,6 +40,7 @@
 				to safety. Please note that we can not accept any liability for unexpected
 				encounters with the undead.
 			</p>
+			
 		</div>
 	</g:HTMLPanel>
 </ui:UiBinder> 

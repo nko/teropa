@@ -1,3 +1,6 @@
+a img {
+	border: 0;
+}
 .moveCursor {
 	cursor: move;
 }
@@ -11,6 +14,8 @@
 
 .LeftPanel {
 	border-right: 1px solid #999;
+	background-image: url("/left_bg.png");
+	background-repeat: repeat-y;
 }
 
 .hand {
@@ -54,4 +59,8 @@
 
 .zed {
 	color: #ff0000;
+}
+
+.koBadge {
+	margin-left: 35px;
 }
