@@ -5,8 +5,6 @@ import teropa.globetrotter.client.common.Position;
 import teropa.globetrotter.client.controls.CopyrightText;
 import teropa.globetrotter.client.controls.Panner;
 import teropa.globetrotter.client.controls.Zoomer;
-import teropa.globetrotter.client.event.internal.ViewClickEvent;
-import teropa.globetrotter.client.event.internal.ViewPanEvent;
 import teropa.globetrotter.client.osm.OpenStreetMapLayer;
 import teropa.globetrotter.client.proj.GoogleMercator;
 
@@ -15,7 +13,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DeferredCommand;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -28,7 +25,7 @@ public class Client implements EntryPoint {
 	
 	private final RootLayoutPanel root = RootLayoutPanel.get();
 	
-	public static final int NUM_STEPS = 40;
+	public static final int NUM_STEPS = 26;
 	
 	public void onModuleLoad() {
 		resources.style().ensureInjected();
