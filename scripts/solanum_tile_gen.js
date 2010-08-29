@@ -176,6 +176,9 @@ tileInit(destPath, levels, t, function(err) {
         clj.stdout.on('data', function (chunk) {
           console.log('clj: ' + chunk);
         });
+        clj.stderr.on('data', function (chunk) {
+          console.log('clj: ' + chunk);
+        });
       }
     });
   }
