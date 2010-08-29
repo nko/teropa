@@ -1,6 +1,7 @@
 // Generates OSM-compatible tile images from the KML files exported from STEM
 
 // 0 -> control_00006_I.kml
+// 1 -> control_00007_I.kml
 
 require.paths.unshift(__dirname + '/../vendor');
 
