@@ -18,7 +18,7 @@ import com.google.gwt.widgetideas.graphics.client.ImageLoader.CallBack;
 
 public class EpidemicLayer extends OpenStreetMapLayer {
 
-	private int timeStep = 0;
+	private int timeStep = Client.NUM_STEPS - 1;
 	private Set<Tile> tiles = new HashSet<Tile>();
 	
 	public EpidemicLayer(String baseUrl, String name, boolean baseLayer) {

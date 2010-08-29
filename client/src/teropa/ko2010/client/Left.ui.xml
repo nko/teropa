@@ -1,0 +1,44 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	<ui:style>
+		.container {
+			padding: 20px;
+		}
+		.zed {
+			color: #ee5555;
+		}
+		.footnote {
+			font-style: italic;
+			font-size: 0.8em;
+		}
+		h1 {
+			margin: 0;
+			line-height: 0.85em;
+			font-size: 2.5em;
+		}
+		p {
+			color: white;
+			font-size: 1.1em;
+		}
+	</ui:style>
+	<g:HTMLPanel>
+		<div class="{style.container}">
+			<h1>
+				<span class="{style.zed}">Zombie</span>
+				Pandemic Tracker
+			</h1>
+			<p>
+				This is an attempt to track the zombie
+				outbreak, beginning from Patient Zero
+				<span class="{style.footnote}">(2010/08/04, Greater Chongqing, China)</span>
+				until the current situation of worldwide pandemic.
+			</p>
+			<p>
+				The controls on the right can be used to find safe zones and plan routes
+				to safety. Please note that we can not accept any liability for unexpected
+				encounters with the undead.
+			</p>
+		</div>
+	</g:HTMLPanel>
+</ui:UiBinder> 

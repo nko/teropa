@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 
 public class TimeControl extends Composite {
@@ -21,7 +22,7 @@ public class TimeControl extends Composite {
 	private final AbsolutePanelWithClicks sliderTrack = new AbsolutePanelWithClicks();
 	private final FocusPanel sliderKnob = new FocusPanel();
 	
-	private final Label info = new Label();
+	private final HTML info = new HTML();
 	
 	private final EpidemicLayer layer;
 	
@@ -30,11 +31,9 @@ public class TimeControl extends Composite {
 	
 	public TimeControl(EpidemicLayer layer) {
 		this.layer = layer;
-		info.setText(layer.getTimeStep()+"");
 		initWidget(container);
 		setStyleName("TimeControl");
 		initControl();
-		
 		info.setStyleName("TimeControlInfo");
 		container.add(info);
 	}
@@ -66,6 +65,8 @@ public class TimeControl extends Composite {
 					sliderTrack.add(sliderTrackBg, stepWidth * i + 1, 12);
 				}				
 				sliderTrack.add(sliderKnob, 0, 0);
+				
+				moveKnobToStep(layer.getTimeStep());
 			}
 		});
 		
@@ -90,15 +91,32 @@ public class TimeControl extends Composite {
 		int step = (int)Math.floor((left / width) * Client.NUM_STEPS);
 		sliderTrack.setWidgetPosition(sliderKnob, (int)(step * stepWidth + 0.5 * stepWidth - 0.5 * sliderKnob.getOffsetWidth()), sliderTrack.getWidgetTop(sliderKnob));
 		layer.setTimestep(step);
-		info.setText(""+step);
+		moveKnobToStep(step);
+		
 	}
 
+	private void moveKnobToStep(int step) {
+		int stepWidth = sliderTrack.getOffsetWidth() / Client.NUM_STEPS;
+		sliderTrack.setWidgetPosition(sliderKnob, (int)(step * stepWidth + 0.5 * stepWidth - 0.5 * sliderKnob.getOffsetWidth()), sliderTrack.getWidgetTop(sliderKnob));
+		updateInfo(step);
+	}
+	
 	public void onKnobMoved(int i) {
 		double width = sliderTrack.getOffsetWidth();
 		int step = (int)Math.floor((i / width) * Client.NUM_STEPS);
-		info.setText(""+step);
+		updateInfo(step);
 	}
 	
+	public void onKnobLingered(int lastLoc) {
+		double width = sliderTrack.getOffsetWidth();
+		int step = (int)Math.floor((lastLoc / width) * Client.NUM_STEPS);
+		layer.setTimestep(step);		
+	}
+
+	private void updateInfo(int step) {
+		info.setHTML("Day <span class=\"zed\">Z</span>"+(step > 0 ? "+"+step : ""));
+	}
+
 	private final class AbsolutePanelWithClicks extends AbsolutePanel implements HasClickHandlers {
 		
 		@Override
@@ -106,6 +124,8 @@ public class TimeControl extends Composite {
 			return addDomHandler(handler, ClickEvent.getType());
 		}
 	}
+
+
 
 
 

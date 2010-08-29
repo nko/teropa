@@ -24,7 +24,8 @@ module.exports = function(req, res, callback) {
   
   res.writeHead(200, {
     'MIME-Version': '1.0',
-    'Content-Type': 'multipart/mixed; boundary="|||"'
+    'Content-Type': 'multipart/mixed; boundary="|||"',
+    'Cache-Control': 'public, max-age=31536000'
   });
   
   writeNext = function() {
@@ -37,14 +38,18 @@ module.exports = function(req, res, callback) {
       tile = tiles.shift();
       t = tile[0], z = tile[1], x = tile[2], y = tile[3];
       fs.readFile(baseDir + '/' + t + '/' + z + '/' + x + '/' + y + '.png', function(err, data) {
-        if (err) throw err;
-        var encoded = base64.encode(data);
-        
-        res.write('\n--|||\n');
-        res.write('Content-Type: image/png\n');
-        res.write(encoded);
-        
-        writeNext();
+        if (err) {
+          console.log(err);
+          writeNext();
+        } else {
+          var encoded = base64.encode(data);
+          
+          res.write('\n--|||\n');
+          res.write('Content-Type: image/png\n');
+          res.write(encoded);
+          
+          writeNext();
+        }
       });
       
     }
