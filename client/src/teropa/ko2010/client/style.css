@@ -1,3 +1,6 @@
+.moveCursor {
+	cursor: move;
+}
 .copy {
 	padding-left: 40px;
 	font-size: 0.8em;

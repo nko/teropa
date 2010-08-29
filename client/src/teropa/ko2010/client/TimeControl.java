@@ -25,7 +25,7 @@ public class TimeControl extends Composite {
 	
 	private final EpidemicLayer layer;
 	
-	private final PickupDragController dragController = new PickupDragController(sliderTrack, true);
+	private final PickupDragController dragController = new TimeControlDragController(sliderTrack, this);
 	
 	
 	public TimeControl(EpidemicLayer layer) {
@@ -93,6 +93,11 @@ public class TimeControl extends Composite {
 		info.setText(""+step);
 	}
 
+	public void onKnobMoved(int i) {
+		double width = sliderTrack.getOffsetWidth();
+		int step = (int)Math.floor((i / width) * Client.NUM_STEPS);
+		info.setText(""+step);
+	}
 	
 	private final class AbsolutePanelWithClicks extends AbsolutePanel implements HasClickHandlers {
 		
@@ -101,5 +106,7 @@ public class TimeControl extends Composite {
 			return addDomHandler(handler, ClickEvent.getType());
 		}
 	}
+
+
 
 }
