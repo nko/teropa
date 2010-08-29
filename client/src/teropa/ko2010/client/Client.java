@@ -19,6 +19,7 @@ import com.google.gwt.user.client.ui.DockPanel;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.widgetideas.graphics.client.Color;
 
 public class Client implements EntryPoint {
 
@@ -51,7 +52,7 @@ public class Client implements EntryPoint {
 		map.setMaxExtent(GoogleMercator.MAX_EXTENT);
 		map.setResolutions(getResolutions(), 1);
 		map.setCenter(new LonLat(391357.58482, 5476196.443835));
-		
+		map.getView().setBackgroundColor(new Color("#c8c8c8"));
 		OpenStreetMapLayer base = new OpenStreetMapLayer(GWT.getHostPageBaseURL() + "tiles/osm", "Mapnik", true);
 		map.addLayer(base);
 		

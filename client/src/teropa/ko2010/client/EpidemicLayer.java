@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import teropa.globetrotter.client.Grid.Tile;
 import teropa.globetrotter.client.osm.OpenStreetMapLayer;
@@ -19,7 +18,6 @@ import com.google.gwt.widgetideas.graphics.client.ImageLoader.CallBack;
 public class EpidemicLayer extends OpenStreetMapLayer {
 
 	private int timeStep = Client.NUM_STEPS - 1;
-	private Set<Tile> tiles = new HashSet<Tile>();
 	
 	public EpidemicLayer(String baseUrl, String name, boolean baseLayer) {
 		super(baseUrl, name, baseLayer);
@@ -33,10 +31,9 @@ public class EpidemicLayer extends OpenStreetMapLayer {
 		boolean chg = timeStep != this.timeStep;
 		this.timeStep = timeStep;
 		if (chg) {
-			super.onAllTilesDeactivated();
-			context.getView().draw(true);
-			images.clear();
-			onTilesActivated(tiles);
+			HashSet<Tile> tmp = new HashSet<Tile>(tiles);
+			onAllTilesDeactivated();
+			onTilesActivated(tmp);
 		}
 	}
 	
@@ -47,12 +44,9 @@ public class EpidemicLayer extends OpenStreetMapLayer {
 	
 	@Override
 	public void onTilesActivated(Collection<Tile> newTiles) {
-		if (newTiles.isEmpty()) return;
-		
 		tiles.addAll(newTiles);
 		
 		MXHR mxhr = new MXHR();
-		
 		
 		StringBuilder qryString = new StringBuilder();
 		for (final Tile each : newTiles) {
@@ -75,9 +69,10 @@ public class EpidemicLayer extends OpenStreetMapLayer {
 				ImageLoader.loadImages(new String[] { "data:image/png;base64,"+evt.payload },  new CallBack() {
 					public void onImagesLoaded(ImageElement[] imageElements) {
 						ImageElement imgEl = imageElements[0];
-						images.put(tile, imgEl);
-						context.getView().getCanvas().drawImage(imgEl, tile.getLeftX(), tile.getTopY(), tile.getWidth(), tile.getHeight());
-						context.getView().tileUpdated(tile, _this);
+						if (tiles.contains(tile)) {
+							images.put(tile, imgEl);
+							context.getView().tileUpdated(tile, _this);
+						}
 					}
 				});
 			}
@@ -85,18 +80,5 @@ public class EpidemicLayer extends OpenStreetMapLayer {
 		
 		mxhr.load(baseUrl + "many?"+qryString.toString());
 	}
-	
-	
-	@Override
-	public void onTilesDeactivated(Collection<Tile> removedTiles) {
-		super.onTilesDeactivated(removedTiles);
-		tiles.removeAll(removedTiles);
-	}
-
-	@Override
-	public void onAllTilesDeactivated() {
-		super.onAllTilesDeactivated();
-		tiles.clear();
-	}	
 	
 }

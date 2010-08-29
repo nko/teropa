@@ -55,8 +55,8 @@ module.exports = function(z, x, y, req, res, callback) {
             out.end();
             tileOminouser(tmpFile, function(err) {
               if (err) {
+                res.writeHead(500);
                 res.end();
-                callback();
               } else {
                 var finalStream = fs.createReadStream(tmpFile);
                 res.writeHead(upstreamRes.statusCode, { "Content-Length": fs.statSync(tmpFile).size });
