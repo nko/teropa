@@ -1,4 +1,8 @@
 var http = require('http')
+  , fs = require('fs')
+  , sys = require('sys')
+  , temp = require('node-temp/lib/temp')
+  , tileOminouser = require('./tile_ominouser')
   , clients = [http.createClient(80, 'tile.openstreetmap.org'),
                http.createClient(80, 'tile.openstreetmap.org')];
 
@@ -23,17 +27,47 @@ module.exports = function(z, x, y, req, res, callback) {
     var upstreamReq = client.request('GET', '/'+z+'/'+x+'/'+y+'.png', {
       'User-Agent': 'Caching tile proxy for application http://teropa.no.de/'
     });
+    
     upstreamReq.on('response', function(upstreamRes) {
+      var chunks = [];
       upstreamRes.on('data', function(chunk) {
-        res.write(chunk, 'binary');
+        chunks.push(chunk);
       });
       upstreamRes.on('end', function() {
-        res.end();
         releaseClient(client);
-        callback();
+
+        var tmpFile = '/tmp/solanum_tile_'+(Math.random() * new Date().getTime());
+        var out = fs.createWriteStream(tmpFile);
+        var w = function() {
+          if (chunks.length > 0) {
+            if (out.write(chunks.shift())) {
+              w();
+            } else {
+              var l = function() {
+                out.removeListener('drain', l);
+                w();
+              }
+              out.addListener('drain', l);
+            }
+          } else {
+            out.end();
+            tileOminouser(tmpFile, function(err) {
+              if (err) throw err;
+              var finalStream = fs.createReadStream(tmpFile);
+              res.writeHead(upstreamRes.statusCode, { "Content-Length": fs.statSync(tmpFile).size });
+              finalStream.on('data', function(chunk) {
+                res.write(chunk, 'binary');
+              });
+              finalStream.on('end', function() {
+                res.end();
+              });
+            });    
+          }
+        }
+        w();
+        
       });
-      res.writeHead(upstreamRes.statusCode, upstreamRes.headers);
     });
-    upstreamReq.end();    
+    upstreamReq.end();
   });
 };

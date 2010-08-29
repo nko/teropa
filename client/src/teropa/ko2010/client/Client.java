@@ -31,7 +31,7 @@ public class Client implements EntryPoint {
 		map.setMaxExtent(GoogleMercator.MAX_EXTENT);
 		map.setResolutions(getResolutions(), 2);
 		
-		OpenStreetMapLayer base = new OpenStreetMapLayer("http://tile.openstreetmap.org/", "Mapnik", true);
+		OpenStreetMapLayer base = new OpenStreetMapLayer(GWT.getHostPageBaseURL() + "tiles/osm", "Mapnik", true);
 		map.addLayer(base);
 		
 		EpidemicLayer solanum = new EpidemicLayer(GWT.getHostPageBaseURL() + "tiles/solanum", "Solanum", false);
