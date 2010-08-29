@@ -19,6 +19,7 @@ function releaseMutex() {
 }
 
 module.exports = function(tmpFile, z, x, y) {
+  console.log('writing '+tmpFile+' to OSM cache: '+baseDir+'/'+z+'/'+x+'/'+y)
   obtainMutex(function() {
     path.exists(baseDir+'/'+z, function(exists) {
       if (!exists) fs.mkdirSync(baseDir+'/'+z, 0777);
@@ -26,7 +27,8 @@ module.exports = function(tmpFile, z, x, y) {
         if (!exists) fs.mkdirSync(baseDir+'/'+z+'/'+x, 0777);
         path.exists(baseDir+'/'+z+'/'+x+'/'+y+'.png', function(exists) {
           if (!exists) {
-            fs.rename(tmpFile, baseDir+'/'+z+'/'+x+'/'+y+'.png', function() {
+            fs.rename(tmpFile, baseDir+'/'+z+'/'+x+'/'+y+'.png', function(err) {
+              if (err) console.log(err);
               releaseMutex();
             });
           } else {

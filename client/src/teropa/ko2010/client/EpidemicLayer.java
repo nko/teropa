@@ -68,7 +68,7 @@ public class EpidemicLayer extends OpenStreetMapLayer {
 		}
 		
 		final OpenStreetMapLayer _this = this;
-		final List<Tile> remainingTiles = new ArrayList<Tile>(tiles);
+		final List<Tile> remainingTiles = new ArrayList<Tile>(newTiles);
 		mxhr.addContentReceivedHandler(new ContentReceivedHandler() {
 			public void onContentReceived(final ContentReceivedEvent evt) {
 				final Tile tile = remainingTiles.remove(0);
