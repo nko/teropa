@@ -22,7 +22,7 @@
   
 (doseq [[tile polys] (polys-grouped-by-tile)]
   (swap! cntr inc)
-  (println @cntr "Drawing" (count polys))
+  (println @cntr "Drawing" (count polys) "for " tile)
   (let [img-file (java.io.File. tile)
   		img (ImageIO/read img-file)
   		g2d (.getGraphics img)]
